@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Authors>ygfweb</Authors>
+    <Company>SiHan</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ygfweb/SiHan.Libs.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ygfweb/SiHan.Libs.Net</RepositoryUrl>
+    <Description>网络访问轻量级工具</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SiHan.Libs.Utils" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>
