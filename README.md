@@ -14,47 +14,55 @@ PM> Install-Package SiHan.Libs.Net
 ### 方式1（常用于调用API）：
 
 ```c#
-ResponseResult result = await HttpHelper.GetAsync("http://www.google.com");
+HttpResponse result = await HttpHelper.GetAsync("http://www.google.com");
 ```
 
 ### 方式2（自定义方式）：
 
 ```c#
-HttpRequest request = new HttpRequest(new Uri("http://www.google.com"));
-using (HttpResponse response = await request.SendAsync())
-{
-    string result = response.GetString();
-}
+HttpRequest request = new HttpRequest("http://www.google.com");
+HttpResponse response = await request.SendAsync();
 ```
 
 ### 方式3（多个请求共享cookie）：
 
 ```c#
 HttpClient client = new HttpClient();
-HttpRequest request = new HttpRequest(new Uri("http://www.google.com"));
-using (HttpResponse response = await client.SendAsync(request))
+HttpResponse response = await client.GetAsync("http://localhost:3353/admin");
+if (response.IsRedirect())
 {
-    string result = response.GetString();
+    string loginUrl = response.GetRedirectUrl();
+    Dictionary<string,string> loginForm = new Dictionary<string, string>();
+    loginForm.Add("UserName","aaa");
+    loginForm.Add("Password","bbb");
+    loginForm.Add("Code","ccc");
+    HttpResponse loginActiveResponse = await client.PostFormAsync(loginUrl,loginForm);
+    if (loginActiveResponse.StatusCode == HttpStatusCode.Found)
+    {
+        HttpResponse adminResponse = await client.GetAsync("http://localhost:3353/admin");
+        if (adminResponse.StatusCode == HttpStatusCode.OK)
+        {
+            textBox1.Text = adminResponse.GetHtml();
+        }
+    }
 }
 ```
 
 ## 工具类
 
-CookieHelper：将cookie保存到文件。
+HttpRequest：HTTP请求对象。
 
-EncodingConverter：实现无视编码获取HTML内容。
+HttpResponse：HTTP响应对象，无需使用using释放资源。
 
 Encodings：常用编码枚举。
 
-HttpException：HTTP请求异常类。
-
-HttpRequestType：HTTP请求类型枚举。
+HttpClient：HTTP客户端，共享多个请求之间的cookie。
 
 MimeTypes：请求或响应类型的常量集合。
 
-NetProxy：封装HTTP请求代理。
-
 UserAgents：提供常见的浏览器UserAgents。
+
+HttpHelper：HTTP帮助类，提供便捷的静态方法。
 
 ## 编码
 

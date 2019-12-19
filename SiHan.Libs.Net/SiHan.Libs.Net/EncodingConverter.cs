@@ -3,24 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace SiHan.Libs.Net.Common
+namespace SiHan.Libs.Net
 {
     /// <summary>
     /// 编码转换器
     /// </summary>
-    public static class EncodingConverter
+    internal static class EncodingConverter
     {
-        /// <summary>
-        /// 编码转换
-        /// </summary>
-        public static string EncodingConvert(string fromString, Encoding fromEncoding, Encoding toEncoding)
-        {
-            byte[] fromBytes = fromEncoding.GetBytes(fromString);
-            byte[] toBytes = Encoding.Convert(fromEncoding, toEncoding, fromBytes);
-            string toString = toEncoding.GetString(toBytes);
-            return toString;
-        }
-
         /// <summary>
         /// 获取HTML内容的编码
         /// </summary>
@@ -60,8 +49,15 @@ namespace SiHan.Libs.Net.Common
         /// <returns></returns>
         public static string GetAutoEncodingString(byte[] htmlBytes, string charSet = "")
         {
-            Encoding encoding = GetEncoding(htmlBytes, charSet);
-            return encoding.GetString(htmlBytes);
+            if (htmlBytes == null || htmlBytes.Length == 0)
+            {
+                return "";
+            }
+            else
+            {
+                Encoding encoding = GetEncoding(htmlBytes, charSet);
+                return encoding.GetString(htmlBytes);
+            }
         }
 
         /// <summary>
@@ -71,7 +67,7 @@ namespace SiHan.Libs.Net.Common
         /// <param name="charSet">字符集</param>
         /// <param name="isAutoEncoding">是否自动编码</param>
         /// <returns></returns>
-        public static string GetHtmlString(byte[] htmlBytes, string charSet = "",bool isAutoEncoding = false)
+        public static string GetHtmlString(byte[] htmlBytes, string charSet = "", bool isAutoEncoding = false)
         {
             if (htmlBytes == null)
             {
@@ -87,7 +83,7 @@ namespace SiHan.Libs.Net.Common
                 {
                     return Encoding.UTF8.GetString(htmlBytes);
                 }
-            }          
+            }
         }
     }
 }

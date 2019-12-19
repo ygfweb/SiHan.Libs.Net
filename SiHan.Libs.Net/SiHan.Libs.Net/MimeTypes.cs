@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiHan.Libs.Net.Common
+namespace SiHan.Libs.Net
 {
     public static class MimeTypes
     {
