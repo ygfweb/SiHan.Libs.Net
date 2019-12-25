@@ -64,6 +64,8 @@ UserAgents：提供常见的浏览器UserAgents。
 
 HttpHelper：HTTP帮助类，提供便捷的静态方法。
 
+ProxyFactory：代理工程类，用于生成代理设置。
+
 ## 编码
 
 ASP.NET Core中不包含GB2312等编码，如果需要对此编码的HTML文档解码，必须需要安装扩展包：

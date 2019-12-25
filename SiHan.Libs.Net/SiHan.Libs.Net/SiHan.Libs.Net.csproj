@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/ygfweb/SiHan.Libs.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ygfweb/SiHan.Libs.Net</RepositoryUrl>
     <Description>网络访问轻量级工具</Description>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
   </PropertyGroup>
 
 </Project>
