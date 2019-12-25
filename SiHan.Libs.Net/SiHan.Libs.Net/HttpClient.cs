@@ -42,6 +42,11 @@ namespace SiHan.Libs.Net
         public int MaxTime { get; set; } = 10 * 1000;
 
         /// <summary>
+        /// 代理设置，默认为空
+        /// </summary>
+        public IWebProxy Proxy { get; set; } = null;
+
+        /// <summary>
         /// 发送HTTP请求
         /// </summary>
         public async Task<HttpResponse> SendAsync(HttpRequest request)
@@ -80,6 +85,15 @@ namespace SiHan.Libs.Net
                 this.semaphore.Release();
             }
         }
+        /// <summary>
+        /// 创建HTTP请求
+        /// </summary>
+        protected HttpRequest CreateHttpRequest(string url)
+        {
+            HttpRequest request = new HttpRequest(url);
+            request.Proxy = this.Proxy;
+            return request;
+        }
 
         /// <summary>
         /// 发送Get请求
@@ -90,7 +104,7 @@ namespace SiHan.Libs.Net
             {
                 throw new ArgumentNullException(nameof(url));
             }
-            HttpRequest request = new HttpRequest(url);
+            HttpRequest request = CreateHttpRequest(url);
             request.Method = "GET";
             return await this.SendAsync(request);
         }
@@ -116,7 +130,7 @@ namespace SiHan.Libs.Net
                 sb.Append($"{item.Key}={item.Value}&");
             }
             string postData = sb.ToString().Trim('&');
-            HttpRequest request = new HttpRequest(url);
+            HttpRequest request = this.CreateHttpRequest(url);
             request.Method = "POST";
             request.ContentType = MimeTypes.Form;
             request.SetPostData(postData);
@@ -137,7 +151,7 @@ namespace SiHan.Libs.Net
             {
                 throw new ArgumentNullException(nameof(json));
             }
-            HttpRequest request = new HttpRequest(url);
+            HttpRequest request = this.CreateHttpRequest(url);
             request.Method = "POST";
             request.ContentType = MimeTypes.JSON;
             request.SetPostData(json);

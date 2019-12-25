@@ -59,20 +59,12 @@ namespace SiHan.Libs.Net
         public int Connectionlimit { get; set; } = 1024;
 
         /// <summary>
-        /// 代理Proxy 服务器用户名
+        /// 代理,默认为null
         /// </summary>
-        public string ProxyUserName { get; set; } = String.Empty;
-        /// <summary>
-        /// 代理 服务器密码
-        /// </summary>
-        public string ProxyPwd { get; set; } = String.Empty;
-        /// <summary>
-        /// 代理 服务IP,如果要使用IE代理就设置为ieproxy
-        /// </summary>
-        public string ProxyIp { get; set; } = String.Empty;
+        public IWebProxy Proxy { get; set; } = null;
 
         /// <summary>
-        /// HTTP头：Host
+        /// HTTP头：Host，默认为空
         /// </summary>
         public string Host { get; set; } = String.Empty;
 
@@ -82,7 +74,7 @@ namespace SiHan.Libs.Net
         public CookieContainer CookieContainer { get; set; } = null;
 
         /// <summary>
-        /// 来源地址，上次访问地址
+        /// 来源地址，上次访问地址，默认为空
         /// </summary>
         public string Referer { get; set; } = String.Empty;
 

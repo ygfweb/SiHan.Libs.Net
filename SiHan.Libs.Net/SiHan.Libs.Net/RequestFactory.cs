@@ -54,31 +54,7 @@ namespace SiHan.Libs.Net
                     webRequest.Headers.Add(key, request.HeaderCollection[key]);
                 }
             }
-            if (string.IsNullOrWhiteSpace(request.ProxyIp))
-            {
-                //禁用代理，默认是开启自动代理，会导致网络访问缓慢。
-                // https://stackoverflow.com/questions/2519655/httpwebrequest-is-extremely-slow
-                webRequest.Proxy = null;
-            }
-            else
-            {
-                if (request.ProxyIp.Contains(":"))
-                {
-                    string[] plist = request.ProxyIp.Split(':');
-                    WebProxy myProxy = new WebProxy(plist[0].Trim(), Convert.ToInt32(plist[1].Trim()));
-                    myProxy.Credentials = new NetworkCredential(request.ProxyUserName, request.ProxyPwd);
-                    webRequest.Proxy = myProxy;
-                }
-                else
-                {
-                    WebProxy myProxy = new WebProxy(request.ProxyIp, false);
-                    //建议连接
-                    myProxy.Credentials = new NetworkCredential(request.ProxyUserName, request.ProxyPwd);
-                    //给当前请求对象
-                    webRequest.Proxy = myProxy;
-                }
-            }
-
+            webRequest.Proxy = request.Proxy;
             if (request.PostData != null && request.PostData.Length > 0)
             {
                 webRequest.ContentLength = request.PostData.Length;
