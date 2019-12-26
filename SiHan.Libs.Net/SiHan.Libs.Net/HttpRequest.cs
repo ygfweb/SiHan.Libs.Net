@@ -49,7 +49,7 @@ namespace SiHan.Libs.Net
         public string UserAgent { get; set; } = UserAgents.PC;
 
         /// <summary>
-        /// 返回数据的编码，默认为UTF8,如果需要对其自动识别，需要将其设置为null，常用编码有utf-8,gbk,gb2312
+        /// 数据的编码，默认为UTF8,如果需要对其自动识别，需要将其设置为null，常用编码有utf-8,gbk,gb2312
         /// </summary>
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
@@ -84,11 +84,6 @@ namespace SiHan.Libs.Net
         public int MaximumAutomaticRedirections { get; set; } = 0;
 
         /// <summary>
-        /// 设置或获取Post参数编码,默认的为UTF-8编码
-        /// </summary>
-        public Encoding PostEncoding { get; set; } = Encoding.UTF8;
-
-        /// <summary>
         /// 请求返回类型，默认为text/html
         /// </summary>
         public string ContentType { get; set; } = MimeTypes.Html;
@@ -120,7 +115,14 @@ namespace SiHan.Libs.Net
         {
             if (!string.IsNullOrWhiteSpace(data))
             {
-                this.PostData = this.PostEncoding.GetBytes(data);
+                if (this.Encoding != null)
+                {
+                    this.PostData = this.Encoding.GetBytes(data);
+                }
+                else
+                {
+                    this.PostData = Encoding.UTF8.GetBytes(data);
+                }
             }
             else
             {
@@ -149,7 +151,22 @@ namespace SiHan.Libs.Net
         public async Task<HttpWebResponse> GetResponseAsync()
         {
             HttpWebRequest request = this.CreateHttpWebRequest();
-            return await request.GetResponseAsync() as HttpWebResponse;
+            try
+            {
+                return await request.GetResponseAsync() as HttpWebResponse;
+            }
+            catch (WebException e)
+            {
+                HttpWebResponse response = e.Response as HttpWebResponse;
+                if (response == null)
+                {
+                    throw e;
+                }
+                else
+                {
+                    return response;
+                }
+            }
         }
 
         /// <summary>
@@ -157,24 +174,9 @@ namespace SiHan.Libs.Net
         /// </summary>
         public async Task<HttpResponse> SendAsync()
         {
-            HttpWebRequest webRequest = CreateHttpWebRequest();
-            using (HttpWebResponse webResponse = await webRequest.GetResponseAsync() as HttpWebResponse)
-            {
-
-                HttpResponse response = new HttpResponse()
-                {
-                    CookieCollection = webResponse.Cookies,
-                    Header = webResponse.Headers,
-                    ResponseUri = webResponse.ResponseUri.ToString(),
-                    ResultByte = webResponse.GetBytes(),
-                    StatusCode = webResponse.StatusCode,
-                    StatusDescription = webResponse.StatusDescription,
-                    CharacterSet = webResponse.CharacterSet,
-                    Encoding = this.Encoding
-                };
-                return response;
-            }
-        }
+            HttpWebResponse webResponse = await this.GetResponseAsync();
+            return webResponse.ToHttpResponse(this.Encoding);
+        }    
     }
 }
 

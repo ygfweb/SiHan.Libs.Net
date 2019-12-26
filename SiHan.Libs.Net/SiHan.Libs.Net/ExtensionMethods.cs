@@ -76,5 +76,23 @@ namespace SiHan.Libs.Net
                 return (CookieContainer)formatter.Deserialize(stream);
             }
         }
+        /// <summary>
+        /// 将HttpWebResponse转换为HttpResponse
+        /// </summary>
+        public static HttpResponse ToHttpResponse(this HttpWebResponse webResponse, Encoding encoding)
+        {
+            HttpResponse response = new HttpResponse()
+            {
+                CookieCollection = webResponse.Cookies,
+                Header = webResponse.Headers,
+                ResponseUri = webResponse.ResponseUri.ToString(),
+                ResultByte = webResponse.GetBytes(),
+                StatusCode = webResponse.StatusCode,
+                StatusDescription = webResponse.StatusDescription,
+                CharacterSet = webResponse.CharacterSet,
+                Encoding = encoding
+            };
+            return response;
+        }
     }
 }
